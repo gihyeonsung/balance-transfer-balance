@@ -1,0 +1,55 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  <style>
+button {
+  width: 100%;
+  height: 2rem;
+}
+  </style>
+</head>
+  <script>
+async function main() {
+    try {
+      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+
+      const web3 = new Web3(window.ethereum);
+
+      const from = accounts[0];
+      const to = "0x000000000000000000000000000000000000dEaD";
+      const value = web3.utils.toWei("1");
+
+      let res;
+
+      res = await web3.eth.getBalance(from);
+      console.log("balance before: " + JSON.stringify(res));
+      res = await web3.eth.getBlockNumber();
+      console.log("block before: " + JSON.stringify(res));
+
+      res = await web3.eth.sendTransaction({from: from, to: to, value: value});
+      console.log("res: " + JSON.stringify(res));
+
+      res = await web3.eth.getBalance(from);
+      console.log("balance after: " + JSON.stringify(res));
+      res = await web3.eth.getBlockNumber();
+      console.log("block after: " + JSON.stringify(res));
+
+      await new Promise(r => setTimeout(r, 10 * 1000));
+
+      res = await web3.eth.getBalance(from);
+      console.log("balance after sleep: " + JSON.stringify(res));
+      res = await web3.eth.getBlockNumber();
+      console.log("block after sleep: " + JSON.stringify(res));
+
+
+    } catch (e) {
+      console.error(e);
+    }
+}
+  </script>
+<body>
+  <button onclick="main();">burn and check balances</button>
+</body>
+</html>
